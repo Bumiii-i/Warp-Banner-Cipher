@@ -40,7 +40,7 @@
             --toggle-text: #333;
             --panel-shadow: 0 10px 30px rgba(0,0,0,0.3);
 
-            /* Animation Colors */
+            /* Animation Colors (Glitch Skew Style) */
             --title-color: #fff;
             --title-glow: rgba(255,255,255,0.4);
             --glitch-1: #00ffff;
@@ -52,7 +52,7 @@
             --nebula-3: rgba(220, 181, 119, 0.05);
         }
 
-        /* --- LIGHT MODE VARIABLES --- */
+        /* --- LIGHT MODE --- */
         body.light-mode {
             --hsr-bg-color: #f0f2f5; 
             --hsr-bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #d0d5dd 100%);
@@ -99,7 +99,7 @@
             height: 100vh; width: 100vw; overflow: hidden; display: flex;
         }
 
-        /* --- GALAXY NEBULA --- */
+        /* --- BACKGROUND --- */
         .galaxy-nebula {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             z-index: -2;
@@ -153,9 +153,7 @@
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
             position: relative;
         }
-        
         .banner-tab:hover { width: 70px; filter: brightness(1.1); } 
-        
         .banner-tab.active {
             background: var(--hsr-sidebar-active); color: var(--hsr-sidebar-text-active);
             width: 75px; box-shadow: var(--panel-shadow);
@@ -188,7 +186,7 @@
         /* --- MAIN STAGE --- */
         .main-stage {
             flex: 1; position: relative; 
-            /* POSISI SWEET SPOT: 35px */
+            /* POSISI: 35px (Sweet Spot) */
             padding: 35px 40px 40px 40px; 
             display: flex; flex-direction: column; align-items: center; 
         }
@@ -207,17 +205,16 @@
         }
         .theme-btn:hover { transform: rotate(30deg) scale(1.1); }
 
-        /* CONTENT WRAPPER (Ramping) */
+        /* CONTENT WRAPPER */
         .content-wrapper {
-            width: 100%; 
-            max-width: 720px; 
+            width: 100%; max-width: 720px; 
             margin: 15px auto 0 auto; 
             text-align: center; 
             animation: fadeIn 0.6s ease-out; display: none; 
         }
         .content-wrapper.active-view { display: block; }
 
-        /* --- JUDUL GLITCH --- */
+        /* --- JUDUL: GLITCH SKEW STYLE (Sesuai Kode Kamu) --- */
         .banner-title {
             font-size: 64px; 
             text-transform: uppercase; 
@@ -227,23 +224,11 @@
             line-height: 1; 
             color: var(--title-color); 
             position: relative; 
+            
+            /* Animasi Getar/Miring + Bayangan */
             animation: glitch-skew 5s infinite linear alternate-reverse;
             background: none;
             -webkit-text-fill-color: initial;
-        }
-        
-        /* DATA TEXT ATTRIBUTE WAJIB ADA DI HTML */
-        .banner-title::before {
-            content: attr(data-text);
-            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
-            color: var(--glitch-2); z-index: -1; opacity: 0.8;
-            clip-path: inset(0 0 0 0); animation: glitch-1 3s infinite linear alternate-reverse;
-        }
-        .banner-title::after {
-            content: attr(data-text);
-            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
-            color: var(--glitch-1); z-index: -2; opacity: 0.8;
-            clip-path: inset(0 0 0 0); animation: glitch-2 2.5s infinite linear alternate-reverse;
         }
 
         @keyframes glitch-skew {
@@ -251,22 +236,6 @@
             91% { text-shadow: -2px 0 var(--glitch-1), 2px 0 var(--glitch-2); transform: skewX(10deg); }
             92% { text-shadow: 2px 0 var(--glitch-1), -2px 0 var(--glitch-2); transform: skewX(-10deg); }
             93%, 100% { text-shadow: 0 0 20px var(--title-glow); transform: skewX(0deg); }
-        }
-        @keyframes glitch-1 {
-            0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
-            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
-            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
-            60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
-            80% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 1px); }
-            100% { clip-path: inset(30% 0 30% 0); transform: translate(2px, -1px); }
-        }
-        @keyframes glitch-2 {
-            0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -2px); }
-            20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, 2px); }
-            40% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -2px); }
-            60% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, 2px); }
-            80% { clip-path: inset(50% 0 30% 0); transform: translate(2px, 1px); }
-            100% { clip-path: inset(0% 0 80% 0); transform: translate(-2px, -2px); }
         }
 
         /* PANEL */
@@ -367,12 +336,12 @@
              background: linear-gradient(90deg, rgba(40, 47, 85, 0.9) 0%, rgba(45, 45, 45, 0.9) 100%);
         }
 
-        /* --- LIGHT MODE BUTTON FIX (AGAK TERANG) --- */
+        /* --- LIGHT MODE BUTTON FIX --- */
         body.light-mode .warp-btn {
-            background: rgba(255, 255, 255, 0.85); /* Dasar tombol putih terang */
+            background: rgba(255, 255, 255, 0.85);
             border-width: 2px;
         }
-        /* Light Mode Enkrip: Krem/Emas Muda */
+        /* Enkrip: Krem/Emas Muda */
         body.light-mode .btn-encrypt-style {
             background: linear-gradient(90deg, #fffcf5 0%, #ffffff 100%);
             border-color: #dcb577; color: #b58d48;
@@ -382,7 +351,7 @@
             background: linear-gradient(90deg, #ffeebb 0%, #ffffff 100%);
             box-shadow: 0 0 20px rgba(220, 181, 119, 0.6);
         }
-        /* Light Mode Dekrip: Putih/Biru Muda */
+        /* Dekrip: Putih/Biru Muda */
         body.light-mode .btn-decrypt-style {
             background: linear-gradient(90deg, #f0f6ff 0%, #ffffff 100%);
             border-color: #a4b6c6; color: #6a7b8c;
@@ -444,11 +413,11 @@
         </div>
 
         <div id="view-cipher" class="content-wrapper active-view">
-            <h1 class="banner-title" data-text="WARP BANNER CIPHER">WARP BANNER CIPHER</h1>
+            <h1 class="banner-title">WARP BANNER CIPHER</h1>
             
             <div class="panel-box">
                 <div class="panel-label"><span><i class="fas fa-keyboard"></i> Input Signal</span></div>
-                <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+                <textarea id="input-text" placeholder="Enter your text..."></textarea>
             </div>
 
             <div class="panel-box" style="border-left-color: var(--hsr-purple);">
@@ -534,4 +503,3 @@
     </script>
 </body>
 </html>
-
