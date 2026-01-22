@@ -40,7 +40,7 @@
             --toggle-text: #333;
             --panel-shadow: 0 10px 30px rgba(0,0,0,0.3);
 
-            /* Animation Colors (Glitch) */
+            /* Animation Colors */
             --title-color: #fff;
             --title-glow: rgba(255,255,255,0.4);
             --glitch-1: #00ffff;
@@ -52,26 +52,33 @@
             --nebula-3: rgba(220, 181, 119, 0.05);
         }
 
-        /* --- LIGHT MODE --- */
+        /* --- LIGHT MODE VARIABLES --- */
         body.light-mode {
             --hsr-bg-color: #f0f2f5; 
             --hsr-bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #d0d5dd 100%);
+            
             --hsr-panel-bg: rgba(255, 255, 255, 0.75); 
             --hsr-panel-border: rgba(0, 0, 0, 0.1);
             --hsr-panel-text: #333333; 
+            
             --hsr-sidebar-bg: rgba(255, 255, 255, 0.85); 
             --hsr-sidebar-active: #333; 
             --hsr-sidebar-text: #555; 
             --hsr-sidebar-text-active: #fff;
+            
             --scroll-thumb: #999;
             --scroll-track: rgba(0,0,0,0.05);
+
             --toggle-bg: #333;
             --toggle-text: #fff;
             --panel-shadow: 0 10px 30px rgba(0,0,0,0.08);
+
             --title-color: #333;
             --title-glow: rgba(0,0,0,0.1);
             --glitch-1: #888;
             --glitch-2: #aaa;
+
+             /* Nebula Colors (Light Mode) */
              --nebula-1: rgba(138, 43, 226, 0.08);
              --nebula-2: rgba(0, 191, 255, 0.08);
              --nebula-3: rgba(255, 127, 80, 0.06);
@@ -146,7 +153,9 @@
             transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
             position: relative;
         }
+        
         .banner-tab:hover { width: 70px; filter: brightness(1.1); } 
+        
         .banner-tab.active {
             background: var(--hsr-sidebar-active); color: var(--hsr-sidebar-text-active);
             width: 75px; box-shadow: var(--panel-shadow);
@@ -179,7 +188,7 @@
         /* --- MAIN STAGE --- */
         .main-stage {
             flex: 1; position: relative; 
-            /* POSISI: 35px agar tidak terlalu mepet, tidak terlalu turun */
+            /* POSISI SWEET SPOT: 35px */
             padding: 35px 40px 40px 40px; 
             display: flex; flex-direction: column; align-items: center; 
         }
@@ -198,11 +207,10 @@
         }
         .theme-btn:hover { transform: rotate(30deg) scale(1.1); }
 
-        /* --- CONTENT WRAPPER --- */
+        /* CONTENT WRAPPER (Ramping) */
         .content-wrapper {
             width: 100%; 
             max-width: 720px; 
-            /* Margin 15px */
             margin: 15px auto 0 auto; 
             text-align: center; 
             animation: fadeIn 0.6s ease-out; display: none; 
@@ -223,11 +231,42 @@
             background: none;
             -webkit-text-fill-color: initial;
         }
+        
+        /* DATA TEXT ATTRIBUTE WAJIB ADA DI HTML */
+        .banner-title::before {
+            content: attr(data-text);
+            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            color: var(--glitch-2); z-index: -1; opacity: 0.8;
+            clip-path: inset(0 0 0 0); animation: glitch-1 3s infinite linear alternate-reverse;
+        }
+        .banner-title::after {
+            content: attr(data-text);
+            position: absolute; left: 0; top: 0; width: 100%; height: 100%;
+            color: var(--glitch-1); z-index: -2; opacity: 0.8;
+            clip-path: inset(0 0 0 0); animation: glitch-2 2.5s infinite linear alternate-reverse;
+        }
+
         @keyframes glitch-skew {
             0%, 90% { text-shadow: 0 0 20px var(--title-glow); transform: skewX(0deg); }
             91% { text-shadow: -2px 0 var(--glitch-1), 2px 0 var(--glitch-2); transform: skewX(10deg); }
             92% { text-shadow: 2px 0 var(--glitch-1), -2px 0 var(--glitch-2); transform: skewX(-10deg); }
             93%, 100% { text-shadow: 0 0 20px var(--title-glow); transform: skewX(0deg); }
+        }
+        @keyframes glitch-1 {
+            0% { clip-path: inset(20% 0 80% 0); transform: translate(-2px, 1px); }
+            20% { clip-path: inset(60% 0 10% 0); transform: translate(2px, -1px); }
+            40% { clip-path: inset(40% 0 50% 0); transform: translate(-2px, 2px); }
+            60% { clip-path: inset(80% 0 5% 0); transform: translate(2px, -2px); }
+            80% { clip-path: inset(10% 0 60% 0); transform: translate(-2px, 1px); }
+            100% { clip-path: inset(30% 0 30% 0); transform: translate(2px, -1px); }
+        }
+        @keyframes glitch-2 {
+            0% { clip-path: inset(10% 0 60% 0); transform: translate(2px, -2px); }
+            20% { clip-path: inset(30% 0 20% 0); transform: translate(-2px, 2px); }
+            40% { clip-path: inset(70% 0 10% 0); transform: translate(2px, -2px); }
+            60% { clip-path: inset(20% 0 50% 0); transform: translate(-2px, 2px); }
+            80% { clip-path: inset(50% 0 30% 0); transform: translate(2px, 1px); }
+            100% { clip-path: inset(0% 0 80% 0); transform: translate(-2px, -2px); }
         }
 
         /* PANEL */
@@ -306,10 +345,9 @@
         }
         .warp-btn:hover .warp-icon { transform: rotate(0deg) scale(1.2); }
 
-        /* KHUSUS ENKRIP */
+        /* KHUSUS ENKRIP (Default Dark) */
         .btn-encrypt-style {
-            border-color: var(--hsr-gold); 
-            color: var(--hsr-gold);
+            border-color: var(--hsr-gold); color: var(--hsr-gold);
             background: linear-gradient(90deg, rgba(61, 44, 29, 0.9) 0%, rgba(30, 30, 30, 0.9) 100%);
         }
         .btn-encrypt-style .warp-icon { color: var(--hsr-gold); }
@@ -318,16 +356,41 @@
              background: linear-gradient(90deg, rgba(75, 54, 35, 0.9) 0%, rgba(45, 45, 45, 0.9) 100%);
         }
 
-        /* KHUSUS DEKRIP */
+        /* KHUSUS DEKRIP (Default Dark) */
         .btn-decrypt-style {
-            border-color: var(--hsr-silver); 
-            color: var(--hsr-silver);
+            border-color: var(--hsr-silver); color: var(--hsr-silver);
             background: linear-gradient(90deg, rgba(29, 34, 61, 0.9) 0%, rgba(30, 30, 30, 0.9) 100%);
         }
         .btn-decrypt-style .warp-icon { color: var(--hsr-silver); }
         .btn-decrypt-style:hover {
              box-shadow: 0 0 20px rgba(164, 182, 198, 0.4);
              background: linear-gradient(90deg, rgba(40, 47, 85, 0.9) 0%, rgba(45, 45, 45, 0.9) 100%);
+        }
+
+        /* --- LIGHT MODE BUTTON FIX (AGAK TERANG) --- */
+        body.light-mode .warp-btn {
+            background: rgba(255, 255, 255, 0.85); /* Dasar tombol putih terang */
+            border-width: 2px;
+        }
+        /* Light Mode Enkrip: Krem/Emas Muda */
+        body.light-mode .btn-encrypt-style {
+            background: linear-gradient(90deg, #fffcf5 0%, #ffffff 100%);
+            border-color: #dcb577; color: #b58d48;
+        }
+        body.light-mode .btn-encrypt-style .warp-icon { color: #b58d48; }
+        body.light-mode .btn-encrypt-style:hover {
+            background: linear-gradient(90deg, #ffeebb 0%, #ffffff 100%);
+            box-shadow: 0 0 20px rgba(220, 181, 119, 0.6);
+        }
+        /* Light Mode Dekrip: Putih/Biru Muda */
+        body.light-mode .btn-decrypt-style {
+            background: linear-gradient(90deg, #f0f6ff 0%, #ffffff 100%);
+            border-color: #a4b6c6; color: #6a7b8c;
+        }
+        body.light-mode .btn-decrypt-style .warp-icon { color: #6a7b8c; }
+        body.light-mode .btn-decrypt-style:hover {
+            background: linear-gradient(90deg, #dce9ff 0%, #ffffff 100%);
+            box-shadow: 0 0 20px rgba(164, 182, 198, 0.6);
         }
 
         .loader { display: none; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid currentColor; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
@@ -381,11 +444,11 @@
         </div>
 
         <div id="view-cipher" class="content-wrapper active-view">
-            <h1 class="banner-title">WARP BANNER CIPHER</h1>
+            <h1 class="banner-title" data-text="WARP BANNER CIPHER">WARP BANNER CIPHER</h1>
             
             <div class="panel-box">
                 <div class="panel-label"><span><i class="fas fa-keyboard"></i> Input Signal</span></div>
-                <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+                <textarea id="input-text" placeholder="Enter text sequence..."></textarea>
             </div>
 
             <div class="panel-box" style="border-left-color: var(--hsr-purple);">
@@ -393,19 +456,19 @@
                     <span><i class="fas fa-code"></i> Output Signal</span>
                     <i class="fas fa-copy" style="cursor:pointer;" onclick="copyToClipboard()" title="Copy Result"></i>
                 </div>
-                <textarea id="output-text" readonly placeholder="Result will appear here..."></textarea>
+                <textarea id="output-text" readonly placeholder="Translated entity will manifest here..."></textarea>
             </div>
         </div>
 
         <div id="view-dev" class="content-wrapper">
-            <h1 class="banner-title" style="color: var(--hsr-purple); --title-glow: rgba(164, 118, 255, 0.5);">DEV ARCHIVES</h1>
+            <h1 class="banner-title" style="color: var(--hsr-purple); --title-glow: rgba(164, 118, 255, 0.5);">DEVELOPER ARCHIVES</h1>
             <div class="dev-card">
                 <div class="dev-row"><div class="dev-label">Name</div><div class="dev-val">Dihyan Gantari Bumi</div></div>
                 <div class="dev-row"><div class="dev-label">Student ID</div><div class="dev-val">24.83.1105</div></div>
                 <div class="dev-row"><div class="dev-label">Inspired By</div><div class="dev-val">Honkai: Star Rail</div></div>
                 
                 <div class="dev-row" style="border:none; padding-top: 20px; display:flex; justify-content:center;">
-                    <a href="{{ url_for('static', filename='presentasi_kripto.pptx') }}" class="ppt-btn" target="_blank" title="Download Presentation">
+                    <a href="https://docs.google.com/presentation/d/1eO_unnI5oSgudEbKE5g39imcRKw57crC/edit?usp=sharing&ouid=101825990384421658531&rtpof=true&sd=true" class="ppt-btn" target="_blank" title="View Presentation">
                         <i class="fas fa-file-powerpoint"></i> Access PPT
                     </a>
                 </div>
