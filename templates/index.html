@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HSR Warp Banner Cipher</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;700;800;900&display=swap');
+
+        :root {
+            /* --- DARK MODE (DEFAULT) --- */
+            --hsr-bg-color: #1a1f2b; 
+            --hsr-bg-gradient: radial-gradient(circle at center, #2a364a 0%, #13161f 100%);
+            
+            /* Panel */
+            --hsr-panel-bg: rgba(12, 16, 26, 0.9); 
+            --hsr-panel-border: rgba(255,255,255,0.15);
+            --hsr-panel-text: #e0e0e0;
+            
+            /* Aksen */
+            --hsr-gold: #dcb577;
+            --hsr-purple: #a476ff;
+            --hsr-silver: #a4b6c6;
+            
+            /* Sidebar Fixed Width */
+            --sidebar-width: 80px;
+            
+            --hsr-sidebar-bg: rgba(20, 25, 35, 0.85);
+            --hsr-sidebar-active: rgba(255, 255, 255, 0.95);
+            --hsr-sidebar-text: #ececec; 
+            --hsr-sidebar-text-active: #333;
+
+            /* Scrollbar */
+            --scroll-thumb: #dcb577; 
+            --scroll-track: transparent;
+
+            --toggle-bg: #e6e6e6;
+            --toggle-text: #333;
+            --panel-shadow: 0 10px 30px rgba(0,0,0,0.3);
+
+            /* Animation Colors (Glitch) */
+            --title-color: #fff;
+            --title-glow: rgba(255,255,255,0.4);
+            --glitch-1: #00ffff;
+            --glitch-2: #ff00ff;
+
+            /* Nebula Colors (Dark Mode) */
+            --nebula-1: rgba(111, 0, 255, 0.15);
+            --nebula-2: rgba(0, 183, 255, 0.1); 
+            --nebula-3: rgba(220, 181, 119, 0.05);
+        }
+
+        /* --- LIGHT MODE --- */
+        body.light-mode {
+            --hsr-bg-color: #f0f2f5; 
+            --hsr-bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #d0d5dd 100%);
+            --hsr-panel-bg: rgba(255, 255, 255, 0.75); 
+            --hsr-panel-border: rgba(0, 0, 0, 0.1);
+            --hsr-panel-text: #333333; 
+            --hsr-sidebar-bg: rgba(255, 255, 255, 0.85); 
+            --hsr-sidebar-active: #333; 
+            --hsr-sidebar-text: #555; 
+            --hsr-sidebar-text-active: #fff;
+            --scroll-thumb: #999;
+            --scroll-track: rgba(0,0,0,0.05);
+            --toggle-bg: #333;
+            --toggle-text: #fff;
+            --panel-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            --title-color: #333;
+            --title-glow: rgba(0,0,0,0.1);
+            --glitch-1: #888;
+            --glitch-2: #aaa;
+             --nebula-1: rgba(138, 43, 226, 0.08);
+             --nebula-2: rgba(0, 191, 255, 0.08);
+             --nebula-3: rgba(255, 127, 80, 0.06);
+        }
+
+        * {
+            box-sizing: border-box; margin: 0; padding: 0;
+            font-family: 'Rajdhani', sans-serif;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(128,128,128,0.5); border-radius: 3px; }
+
+        body {
+            background-color: var(--hsr-bg-color);
+            background-image: var(--hsr-bg-gradient);
+            height: 100vh; width: 100vw; overflow: hidden; display: flex;
+        }
+
+        /* --- GALAXY NEBULA --- */
+        .galaxy-nebula {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: -2;
+            background-image: 
+                radial-gradient(circle at 20% 30%, var(--nebula-1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, var(--nebula-2) 0%, transparent 40%),
+                radial-gradient(circle at 50% 50%, var(--nebula-3) 0%, transparent 60%);
+            background-size: 150% 150%;
+            filter: blur(40px); opacity: 0.8;
+            animation: nebulaPulse 30s ease-in-out infinite alternate;
+        }
+        @keyframes nebulaPulse {
+            0% { background-position: 0% 0%; transform: scale(1); }
+            100% { background-position: 20% 10%; transform: scale(1.1); }
+        }
+
+        .stars {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            z-index: -1; animation: moveStars 100s linear infinite; pointer-events: none; transition: opacity 0.5s;
+        }
+        body:not(.light-mode) .stars {
+            opacity: 0.7; 
+            background-image: radial-gradient(2px 2px at 20px 30px, #eee, transparent), radial-gradient(2px 2px at 40px 70px, #fff, transparent);
+            background-repeat: repeat; background-size: 200px 200px;
+        }
+        body.light-mode .stars {
+            opacity: 0.6; 
+            background-image: 
+                radial-gradient(2px 2px at 20px 30px, #555, transparent),
+                radial-gradient(2px 2px at 40px 70px, #333, transparent),
+                radial-gradient(2px 2px at 50px 160px, #444, transparent),
+                radial-gradient(2px 2px at 90px 40px, #666, transparent);
+            background-repeat: repeat; background-size: 200px 200px;
+        }
+        @keyframes moveStars { from {transform: translateY(0);} to {transform: translateY(-1000px);} }
+
+        /* --- SIDEBAR --- */
+        .sidebar {
+            width: var(--sidebar-width); 
+            height: 100%; padding: 40px 0 0 0;
+            display: flex; flex-direction: column; gap: 15px; z-index: 10;
+        }
+
+        .banner-tab {
+            width: 60px; height: 60px; 
+            background: var(--hsr-sidebar-bg);
+            border-radius: 0 10px 10px 0; 
+            display: flex; justify-content: center; align-items: center; 
+            padding: 0;
+            cursor: pointer; border: 1px solid var(--hsr-panel-border); border-left: none;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); 
+            position: relative;
+        }
+        .banner-tab:hover { width: 70px; filter: brightness(1.1); } 
+        .banner-tab.active {
+            background: var(--hsr-sidebar-active); color: var(--hsr-sidebar-text-active);
+            width: 75px; box-shadow: var(--panel-shadow);
+        }
+
+        .tab-icon-box {
+            width: 35px; height: 35px; 
+            background: #333; 
+            border-radius: 50%;
+            display: flex; justify-content: center; align-items: center;
+            border: 2px solid rgba(255,255,255,0.2); 
+            font-size: 18px; color: var(--hsr-gold); margin: 0; transition: all 0.3s;
+        }
+        body.light-mode .tab-icon-box { background: #fff; border-color: #ccc; }
+        .banner-tab.active .tab-icon-box { border-color: currentColor; background: transparent; }
+
+        .tab-info { 
+            position: absolute; left: 75px; 
+            background: var(--hsr-panel-bg); padding: 5px 12px;
+            border-radius: 4px; border: 1px solid var(--hsr-panel-border);
+            opacity: 0; visibility: hidden;
+            transform: translateX(-10px); transition: all 0.3s ease;
+            white-space: nowrap; pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            backdrop-filter: blur(5px);
+        }
+        .banner-tab:hover .tab-info { opacity: 1; visibility: visible; transform: translateX(5px); }
+        .tab-info h3 { font-size: 13px; text-transform: uppercase; font-weight: 800; color: var(--hsr-panel-text); margin: 0;}
+
+        /* --- MAIN STAGE --- */
+        .main-stage {
+            flex: 1; position: relative; 
+            /* POSISI: 35px agar tidak terlalu mepet, tidak terlalu turun */
+            padding: 35px 40px 40px 40px; 
+            display: flex; flex-direction: column; align-items: center; 
+        }
+
+        .theme-toggle-container { 
+            position: absolute; 
+            top: 30px; 
+            right: 40px; 
+            z-index: 50; 
+        }
+        .theme-btn {
+            background: var(--toggle-bg); color: var(--toggle-text);
+            border: 1px solid var(--hsr-panel-border); width: 45px; height: 45px; border-radius: 50%;
+            cursor: pointer; font-size: 20px; display: flex; justify-content: center; align-items: center;
+            backdrop-filter: blur(5px); transition: 0.3s; box-shadow: var(--panel-shadow);
+        }
+        .theme-btn:hover { transform: rotate(30deg) scale(1.1); }
+
+        /* --- CONTENT WRAPPER --- */
+        .content-wrapper {
+            width: 100%; 
+            max-width: 720px; 
+            /* Margin 15px */
+            margin: 15px auto 0 auto; 
+            text-align: center; 
+            animation: fadeIn 0.6s ease-out; display: none; 
+        }
+        .content-wrapper.active-view { display: block; }
+
+        /* --- JUDUL GLITCH --- */
+        .banner-title {
+            font-size: 64px; 
+            text-transform: uppercase; 
+            font-weight: 800; 
+            margin-bottom: 25px;
+            letter-spacing: 2px; 
+            line-height: 1; 
+            color: var(--title-color); 
+            position: relative; 
+            animation: glitch-skew 5s infinite linear alternate-reverse;
+            background: none;
+            -webkit-text-fill-color: initial;
+        }
+        @keyframes glitch-skew {
+            0%, 90% { text-shadow: 0 0 20px var(--title-glow); transform: skewX(0deg); }
+            91% { text-shadow: -2px 0 var(--glitch-1), 2px 0 var(--glitch-2); transform: skewX(10deg); }
+            92% { text-shadow: 2px 0 var(--glitch-1), -2px 0 var(--glitch-2); transform: skewX(-10deg); }
+            93%, 100% { text-shadow: 0 0 20px var(--title-glow); transform: skewX(0deg); }
+        }
+
+        /* PANEL */
+        .panel-box {
+            background: var(--hsr-panel-bg); backdrop-filter: blur(15px);
+            border: 1px solid var(--hsr-panel-border); border-left: 5px solid var(--hsr-gold); 
+            padding: 15px 20px; margin-bottom: 25px; border-radius: 10px;
+            position: relative; box-shadow: var(--panel-shadow); text-align: left; width: 100%;
+        }
+        .panel-label {
+            font-size: 14px; text-transform: uppercase; color: var(--hsr-gold);
+            margin-bottom: 8px; letter-spacing: 1px; font-weight: bold;
+            display: flex; justify-content: space-between;
+        }
+        textarea {
+            width: 100%; height: 150px; background: transparent; border: none;
+            color: var(--hsr-panel-text); font-size: 16px; resize: none; outline: none;
+            font-weight: 500; line-height: 1.5; overflow-y: auto; padding-right: 10px;
+        }
+        textarea::placeholder { color: var(--hsr-panel-text); opacity: 0.4; }
+
+        #input-text::-webkit-scrollbar-thumb { background-color: var(--hsr-gold); }
+        #output-text::-webkit-scrollbar-thumb { background-color: var(--hsr-purple); }
+
+        .dev-card {
+            background: var(--hsr-panel-bg); backdrop-filter: blur(15px); padding: 30px;
+            border-radius: 12px; border: 1px solid var(--hsr-panel-border); text-align: left;
+            box-shadow: var(--panel-shadow); width: 100%;
+        }
+        .dev-row { margin-bottom: 15px; border-bottom: 1px solid var(--hsr-panel-border); padding-bottom: 5px; }
+        .dev-label { font-size: 12px; color: var(--hsr-gold); text-transform: uppercase; letter-spacing: 1px; }
+        .dev-val { font-size: 24px; font-weight: bold; color: var(--hsr-panel-text); } 
+
+        .ppt-btn {
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            background: rgba(255, 255, 255, 0.05); border: 1px solid var(--hsr-gold);
+            color: var(--hsr-panel-text); padding: 12px 30px; border-radius: 25px;
+            text-decoration: none; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;
+            transition: all 0.3s; margin-top: 15px;
+        }
+        .ppt-btn:hover {
+            background: var(--hsr-gold); color: #333;
+            box-shadow: 0 0 15px var(--hsr-gold); transform: translateY(-2px);
+        }
+
+        /* --- TOMBOL AKSI --- */
+        .action-bar {
+            position: absolute; bottom: 40px; right: 40px; display: flex; gap: 20px; 
+        }
+        
+        .warp-btn {
+            width: 200px; height: 60px; 
+            border-radius: 35px; 
+            display: flex; align-items: center; justify-content: center; 
+            gap: 15px; 
+            padding: 0 20px; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            position: relative; overflow: visible; 
+            box-shadow: var(--panel-shadow);
+            border: 2px solid;
+            font-family: 'Rajdhani', sans-serif;
+            background: rgba(0,0,0,0.3);
+            text-decoration: none;
+        }
+        .warp-btn:hover { transform: scale(1.05); }
+        .warp-btn:active { transform: scale(0.96); }
+
+        .btn-text { font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px;} 
+        
+        .warp-icon {
+            font-size: 24px;
+            transform: rotate(15deg);
+            transition: transform 0.3s ease;
+            filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+        }
+        .warp-btn:hover .warp-icon { transform: rotate(0deg) scale(1.2); }
+
+        /* KHUSUS ENKRIP */
+        .btn-encrypt-style {
+            border-color: var(--hsr-gold); 
+            color: var(--hsr-gold);
+            background: linear-gradient(90deg, rgba(61, 44, 29, 0.9) 0%, rgba(30, 30, 30, 0.9) 100%);
+        }
+        .btn-encrypt-style .warp-icon { color: var(--hsr-gold); }
+        .btn-encrypt-style:hover {
+             box-shadow: 0 0 20px rgba(220, 179, 104, 0.4);
+             background: linear-gradient(90deg, rgba(75, 54, 35, 0.9) 0%, rgba(45, 45, 45, 0.9) 100%);
+        }
+
+        /* KHUSUS DEKRIP */
+        .btn-decrypt-style {
+            border-color: var(--hsr-silver); 
+            color: var(--hsr-silver);
+            background: linear-gradient(90deg, rgba(29, 34, 61, 0.9) 0%, rgba(30, 30, 30, 0.9) 100%);
+        }
+        .btn-decrypt-style .warp-icon { color: var(--hsr-silver); }
+        .btn-decrypt-style:hover {
+             box-shadow: 0 0 20px rgba(164, 182, 198, 0.4);
+             background: linear-gradient(90deg, rgba(40, 47, 85, 0.9) 0%, rgba(45, 45, 45, 0.9) 100%);
+        }
+
+        .loader { display: none; border: 3px solid rgba(255,255,255,0.1); border-top: 3px solid currentColor; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        .loading .btn-text, .loading .warp-icon { display: none; }
+        .loading .loader { display: block; }
+
+        .character-art {
+            position: absolute; right: -80px; bottom: -80px; width: 800px; height: 800px;
+            background-image: url('https://upload.wikimedia.org/wikipedia/en/9/96/Honkai_Star_Rail_logo.png');
+            background-size: contain; background-repeat: no-repeat; background-position: bottom right;
+            opacity: 0.1; z-index: -1; pointer-events: none; transition: opacity 0.5s;
+            mask-image: linear-gradient(to top, black 40%, transparent 100%);
+        }
+        body.light-mode .character-art { filter: grayscale(100%); opacity: 0.03; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Mobile */
+        @media (max-width: 900px) {
+            body { flex-direction: column; overflow: auto; height: auto; }
+            .sidebar { width: 100%; height: auto; flex-direction: row; overflow-x: auto; padding: 10px; gap: 10px;}
+            .banner-tab { width: 70px; flex-shrink: 0; border-radius: 4px; margin-right: 0;}
+            .main-stage { padding: 40px 20px; align-items: flex-start;} 
+            .content-wrapper { width: 100%; margin: 20px 0 0 0; min-width: auto; max-width: 100%; }
+            .action-bar { position: relative; bottom: auto; right: auto; margin-top: 30px; flex-direction: column; width: 100%; }
+            .warp-btn { width: 100%; }
+            .banner-title { font-size: 36px; white-space: normal; line-height: 1;}
+            .theme-toggle-container { top: 15px; right: 15px; }
+            textarea { height: 100px; font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="galaxy-nebula"></div>
+    <div class="stars"></div>
+    <aside class="sidebar">
+        <div class="banner-tab active" onclick="switchView('cipher', this)">
+            <div class="tab-icon-box"><i class="fas fa-terminal"></i></div>
+            <div class="tab-info"><h3>Cipher</h3></div>
+        </div>
+        
+        <div class="banner-tab" onclick="switchView('dev', this)">
+            <div class="tab-icon-box" style="color: var(--hsr-purple); border-color:rgba(164, 118, 255, 0.3);"><i class="fas fa-id-card"></i></div>
+            <div class="tab-info"><h3>Credits</h3></div>
+        </div>
+    </aside>
+
+    <main class="main-stage">
+        <div class="theme-toggle-container">
+            <button id="theme-switch" class="theme-btn" title="Toggle Light/Dark Mode"><i class="fas fa-sun"></i></button>
+        </div>
+
+        <div id="view-cipher" class="content-wrapper active-view">
+            <h1 class="banner-title">WARP BANNER CIPHER</h1>
+            
+            <div class="panel-box">
+                <div class="panel-label"><span><i class="fas fa-keyboard"></i> Input Signal</span></div>
+                <textarea id="input-text" placeholder="Enter your text here..."></textarea>
+            </div>
+
+            <div class="panel-box" style="border-left-color: var(--hsr-purple);">
+                <div class="panel-label" style="color: var(--hsr-purple);">
+                    <span><i class="fas fa-code"></i> Output Signal</span>
+                    <i class="fas fa-copy" style="cursor:pointer;" onclick="copyToClipboard()" title="Copy Result"></i>
+                </div>
+                <textarea id="output-text" readonly placeholder="Result will appear here..."></textarea>
+            </div>
+        </div>
+
+        <div id="view-dev" class="content-wrapper">
+            <h1 class="banner-title" style="color: var(--hsr-purple); --title-glow: rgba(164, 118, 255, 0.5);">DEV ARCHIVES</h1>
+            <div class="dev-card">
+                <div class="dev-row"><div class="dev-label">Name</div><div class="dev-val">Dihyan Gantari Bumi</div></div>
+                <div class="dev-row"><div class="dev-label">Student ID</div><div class="dev-val">24.83.1105</div></div>
+                <div class="dev-row"><div class="dev-label">Inspired By</div><div class="dev-val">Honkai: Star Rail</div></div>
+                
+                <div class="dev-row" style="border:none; padding-top: 20px; display:flex; justify-content:center;">
+                    <a href="{{ url_for('static', filename='presentasi_kripto.pptx') }}" class="ppt-btn" target="_blank" title="Download Presentation">
+                        <i class="fas fa-file-powerpoint"></i> Access PPT
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="action-bar" id="action-buttons">
+            <button id="btn-encrypt" class="warp-btn btn-encrypt-style" onclick="processText('encrypt')">
+                <div class="loader"></div>
+                <div class="btn-text">Encrypt</div>
+                <i class="fas fa-ticket-alt warp-icon"></i>
+            </button>
+            
+            <button id="btn-decrypt" class="warp-btn btn-decrypt-style" onclick="processText('decrypt')">
+                <div class="loader"></div>
+                <div class="btn-text">Decrypt</div>
+                <i class="fas fa-ticket-alt warp-icon"></i>
+            </button>
+        </div>
+        
+        <div class="character-art"></div>
+    </main>
+
+    <script>
+        const themeSwitch = document.getElementById('theme-switch');
+        const body = document.body;
+        const icon = themeSwitch.querySelector('i');
+        icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); 
+        themeSwitch.addEventListener('click', () => {
+            body.classList.toggle('light-mode');
+            if (body.classList.contains('light-mode')) { icon.classList.remove('fa-sun'); icon.classList.add('fa-moon'); } 
+            else { icon.classList.remove('fa-moon'); icon.classList.add('fa-sun'); }
+        });
+
+        function switchView(viewName, tabElement) {
+            document.querySelectorAll('.banner-tab').forEach(t => t.classList.remove('active'));
+            tabElement.classList.add('active');
+            document.querySelectorAll('.content-wrapper').forEach(v => v.classList.remove('active-view'));
+            document.getElementById(`view-${viewName}`).classList.add('active-view');
+            document.getElementById('action-buttons').style.display = (viewName === 'cipher') ? 'flex' : 'none';
+        }
+
+        async function processText(action) {
+            const inputText = document.getElementById('input-text').value;
+            const outputField = document.getElementById('output-text');
+            const btn = document.getElementById(`btn-${action}`);
+            if (!inputText) return;
+            btn.classList.add('loading'); outputField.value = ""; 
+            await new Promise(r => setTimeout(r, 800));
+            try {
+                const response = await fetch(`/${action}`, {
+                    method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ text: inputText })
+                });
+                const data = await response.json(); outputField.value = data.result;
+            } catch (error) { console.error('Error:', error); outputField.value = "Error: Transmission Failed."; } 
+            finally { btn.classList.remove('loading'); }
+        }
+        function copyToClipboard() {
+            const outputText = document.getElementById('output-text');
+            if (!outputText.value) return;
+            outputText.select(); document.execCommand("copy");
+        }
+    </script>
+</body>
+</html>
