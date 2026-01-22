@@ -6,7 +6,6 @@ app = Flask(__name__)
 # --- LOGIKA KRIPTOGRAFI ---
 class WarpBannerCipher:
     def __init__(self):
-        # Tabel Mapping Terbaru (Cipher 1 diubah jadi KAPITAL semua)
         self.mapping = {
             'A': ['SE10INNT1', '4427191', '4433598'],
             'B': ['JY10BEDN2', '1023138', '1030591'],
@@ -72,7 +71,6 @@ class WarpBannerCipher:
         
         while idx < length:
             found = False
-            # Cek panjang 9, 7, 6 (Urutan penting agar tidak salah potong)
             for check_len in [9, 7, 6]:
                 if idx + check_len <= length:
                     chunk = ciphertext[idx : idx+check_len]
@@ -109,4 +107,5 @@ def decrypt_route():
     return jsonify({'result': result})
 
 if __name__ == '__main__':
+
     app.run(debug=True)
